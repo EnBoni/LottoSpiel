@@ -26,25 +26,25 @@ public class Lotto_GUI_panel {
 
 	private JFrame 					frmDre;
 	private JTextField 				wette_f;
+	
+	//Lotto_Dreh_Rad zug die Zahlkombination aus und zeigt die Drehung des Rad
 	public static Lotto_Dreh_Rad 	mainapp;
-	private JTextField 				uint1;
-	private JTextField 				uint2;
-	private JTextField 				uint3;
-	private JTextField 				uint4;
-	private JTextField 				uint5;
-	private JTextField 				uint6;
-	private JTextField 				pint6;
-	private JTextField 				pint1;
-	private JTextField 				pint2;
-	private JTextField 				pint3;
-	private JTextField 				pint4;
-	private JTextField 				pint5;
+	
+	//uints[0],uints[1]...sind Textfelden beim User benutz,um eigenen Zahlkombination einzugeben
+	//uints[0],uints[1]...sind Textfelden beim Program benutz,um ausgezugene Zahlkombination zu zeigen
+	private JTextField[] 			pints = new JTextField[6];
+	private JTextField[] 			uints = new JTextField[6];
+	
+	
+	//erstelltCombi erstellt eine zufallige zahlKombination,ist ein graphisches Element
 	private JButton 				erstelltCombi;
 	
 	public int wette=0;
+	//gui_panel_user_combi erh‰lt die Kombination des User
+	//lotto_dreh_rad_combi erh‰lt die Kombination des Program
 	
-	public int[] gui_panel_user_combi;
-	public int[] lotto_dreh_rad_combi;
+	public int[] gui_panel_user_combi = new int[6];
+	public int[] lotto_dreh_rad_combi = new int[6];
 	/**
 	 * Launch the application.
 	 */
@@ -76,13 +76,14 @@ public class Lotto_GUI_panel {
 	private void initialize() {
 		gui_panel_user_combi= new int[6];
 		lotto_dreh_rad_combi=mainapp.zahlen;
-		System.out.println(lotto_dreh_rad_combi);
 		frmDre = new JFrame();
 		frmDre.setTitle("Dreh das Rad an! (CONTROL PANEL)");
 		frmDre.setBounds(100, 100, 450, 300);
 		frmDre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDre.getContentPane().setLayout(null);
-		
+		//t ist ein timer,der nach dem Beginn funktioniert immer durch der Anwendungseinfuhrung bis das Schlieﬂen des Program
+		//aktualiesiert die nicht editierbaren TextFelde mit der Zahlen der letzige Extraktion
+		//in Falls keine Extraktion erledigt war,sind die auf "0" standard gesetz.
 		Timer t=new Timer();
 		t.schedule(new TimerTask() {
 			
@@ -91,12 +92,9 @@ public class Lotto_GUI_panel {
 				// TODO Auto-generated method stub
 				lotto_dreh_rad_combi=mainapp.letze_zahlen;
 				try {
-					pint1.setText(""+lotto_dreh_rad_combi[0]);
-					pint2.setText(""+lotto_dreh_rad_combi[1]);
-					pint3.setText(""+lotto_dreh_rad_combi[2]);
-					pint4.setText(""+lotto_dreh_rad_combi[3]);
-					pint5.setText(""+lotto_dreh_rad_combi[4]);
-					pint6.setText(""+lotto_dreh_rad_combi[5]);
+					for(int i=0;i<pints.length;i++) {
+						pints[i].setText(""+lotto_dreh_rad_combi[i]);
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -105,7 +103,7 @@ public class Lotto_GUI_panel {
 			}
 		},0, 500);
 		
-		JButton spin = new JButton("New button");
+		JButton spin = new JButton("Spin!");
 		spin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -137,21 +135,36 @@ public class Lotto_GUI_panel {
 				// TODO Auto-generated method stub
 				
 			}
-			
+			//IF-Bedingung checkt einfach dass die felden 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (uint1.getText().equals("")||
-					uint2.getText().equals("")||
-					uint3.getText().equals("")||
-					uint4.getText().equals("")||
-					uint5.getText().equals("")||
-					uint6.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "Bitte jeden Feld ausfullen");
-					
-				}else {
+				
+				boolean greenlight=true;
+				try {
+					for(int i=0;i<uints.length || greenlight;i++) {
+						int tmp=0;
+						try {
+							tmp = Integer.parseInt(uints[i].getText());
+							System.out.println(tmp);
+							
+						}catch(NumberFormatException exc) {
+							greenlight=false;
+						}
+						if(tmp>0 && tmp<50) greenlight = true;
+						else 				greenlight = false;
+						
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(greenlight) {
 					mainapp.startRotation();
 					mainapp.setUserCombi(gui_panel_user_combi);
 					reset_pints();
+				}else {
+					JOptionPane.showMessageDialog(null, "Bitte jeden Feld ausfullen");
 				}
 			}
 		});
@@ -229,87 +242,79 @@ public class Lotto_GUI_panel {
 			}
 		});
 		
-		uint1 = new JTextField();
-		uint1.setBounds(10, 203, 35, 20);
-		frmDre.getContentPane().add(uint1);
-		uint1.setColumns(10);
+		uints[0] = new JTextField();
+		uints[0].setBounds(10, 203, 35, 20);
+		frmDre.getContentPane().add(uints[0]);
+		uints[0].setColumns(10);
 		
-		uint2 = new JTextField();
-		uint2.setColumns(10);
-		uint2.setBounds(55, 203, 35, 20);
-		frmDre.getContentPane().add(uint2);
+		uints[1] = new JTextField();
+		uints[1].setColumns(10);
+		uints[1].setBounds(55, 203, 35, 20);
+		frmDre.getContentPane().add(uints[1]);
 		
-		uint3 = new JTextField();
-		uint3.setColumns(10);
-		uint3.setBounds(100, 203, 35, 20);
-		frmDre.getContentPane().add(uint3);
+		uints[2] = new JTextField();
+		uints[2].setColumns(10);
+		uints[2].setBounds(100, 203, 35, 20);
+		frmDre.getContentPane().add(uints[2]);
 		
-		uint4 = new JTextField();
-		uint4.setColumns(10);
-		uint4.setBounds(145, 203, 35, 20);
-		frmDre.getContentPane().add(uint4);
+		uints[3] = new JTextField();
+		uints[3].setColumns(10);
+		uints[3].setBounds(145, 203, 35, 20);
+		frmDre.getContentPane().add(uints[3]);
 		
-		uint5 = new JTextField();
-		uint5.setColumns(10);
-		uint5.setBounds(190, 203, 35, 20);
-		frmDre.getContentPane().add(uint5);
+		uints[4] = new JTextField();
+		uints[4].setColumns(10);
+		uints[4].setBounds(190, 203, 35, 20);
+		frmDre.getContentPane().add(uints[4]);
 		
-		uint6 = new JTextField();
-		uint6.setColumns(10);
-		uint6.setBounds(235, 203, 35, 20);
-		frmDre.getContentPane().add(uint6);
+		uints[5] = new JTextField();
+		uints[5].setColumns(10);
+		uints[5].setBounds(235, 203, 35, 20);
+		frmDre.getContentPane().add(uints[5]);
 		
-		pint6 = new JTextField();
-		pint6.setEditable(false);
-		pint6.setColumns(10);
-		pint6.setBounds(235, 234, 35, 20);
-		frmDre.getContentPane().add(pint6);
+		pints[5] = new JTextField();
+		pints[5].setEditable(false);
+		pints[5].setColumns(10);
+		pints[5].setBounds(235, 234, 35, 20);
+		frmDre.getContentPane().add(pints[5]);
 		
-		pint1 = new JTextField();
-		pint1.setEditable(false);
-		pint1.setColumns(10);
-		pint1.setBounds(10, 234, 35, 20);
-		frmDre.getContentPane().add(pint1);
+		pints[0] = new JTextField();
+		pints[0].setEditable(false);
+		pints[0].setColumns(10);
+		pints[0].setBounds(10, 234, 35, 20);
+		frmDre.getContentPane().add(pints[0]);
 		
-		pint2 = new JTextField();
-		pint2.setEditable(false);
-		pint2.setColumns(10);
-		pint2.setBounds(55, 234, 35, 20);
-		frmDre.getContentPane().add(pint2);
+		pints[1] = new JTextField();
+		pints[1].setEditable(false);
+		pints[1].setColumns(10);
+		pints[1].setBounds(55, 234, 35, 20);
+		frmDre.getContentPane().add(pints[1]);
 		
-		pint3 = new JTextField();
-		pint3.setEditable(false);
-		pint3.setColumns(10);
-		pint3.setBounds(100, 234, 35, 20);
-		frmDre.getContentPane().add(pint3);
+		pints[2] = new JTextField();
+		pints[2].setEditable(false);
+		pints[2].setColumns(10);
+		pints[2].setBounds(100, 234, 35, 20);
+		frmDre.getContentPane().add(pints[2]);
 		
-		pint4 = new JTextField();
-		pint4.setEditable(false);
-		pint4.setColumns(10);
-		pint4.setBounds(145, 234, 35, 20);
-		frmDre.getContentPane().add(pint4);
+		pints[3] = new JTextField();
+		pints[3].setEditable(false);
+		pints[3].setColumns(10);
+		pints[3].setBounds(145, 234, 35, 20);
+		frmDre.getContentPane().add(pints[3]);
 		
-		pint5 = new JTextField();
-		pint5.setEditable(false);
-		pint5.setColumns(10);
-		pint5.setBounds(190, 234, 35, 20);
-		frmDre.getContentPane().add(pint5);
+		pints[4] = new JTextField();
+		pints[4].setEditable(false);
+		pints[4].setColumns(10);
+		pints[4].setBounds(190, 234, 35, 20);
+		frmDre.getContentPane().add(pints[4]);
 		
 		erstelltCombi = new JButton("Random Number");
 		erstelltCombi.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ZufalligerZahl zz= new ZufalligerZahl();
-				gui_panel_user_combi= new int[6];
 				gui_panel_user_combi=zz.createCombination();
-				
-				uint1.setText(""+gui_panel_user_combi[0]);
-				uint2.setText(""+gui_panel_user_combi[1]);
-				uint3.setText(""+gui_panel_user_combi[2]);
-				uint4.setText(""+gui_panel_user_combi[3]);
-				uint5.setText(""+gui_panel_user_combi[4]);
-				uint6.setText(""+gui_panel_user_combi[5]);
-				
+				reset_pints();				
 			}
 		});
 		erstelltCombi.setBounds(280, 203, 148, 20);
@@ -329,11 +334,8 @@ public class Lotto_GUI_panel {
 	}
 	
 	private void reset_pints() {
-		uint1.setText(""+gui_panel_user_combi[0]);
-		uint2.setText(""+gui_panel_user_combi[1]);
-		uint3.setText(""+gui_panel_user_combi[2]);
-		uint4.setText(""+gui_panel_user_combi[3]);
-		uint5.setText(""+gui_panel_user_combi[4]);
-		uint6.setText(""+gui_panel_user_combi[5]);
+		for(int i=0;i<uints.length;i++) {
+			uints[i].setText(""+gui_panel_user_combi[i]);
+		}
 	}
 }

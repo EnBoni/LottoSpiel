@@ -43,10 +43,7 @@ public class Lotto_Dreh_Rad {
 	public static ZufalligerZahl 	casual_numbers;
 	
 	private static Random 			casual;
-	
-	public static String 			st_zahlen = "";
-	public static String 			st_extracted = "";
-	
+
 	public 		  JFrame 			mainwindow;
 
 	public static void main(String[] args) {
@@ -55,7 +52,6 @@ public class Lotto_Dreh_Rad {
 				try {
 					Lotto_Dreh_Rad window = new Lotto_Dreh_Rad();
 					
-					Lotto_GUI_panel lgu = new Lotto_GUI_panel();
 					
 					
 					window.mainwindow.setVisible(true);
@@ -74,6 +70,7 @@ public class Lotto_Dreh_Rad {
 		reife = new JLabel("");
 
 		setAnimationData();
+		
 		reife.setBounds(0, 0, i_w, i_h);
 
 		mainwindow = new JFrame();
@@ -140,6 +137,7 @@ public class Lotto_Dreh_Rad {
 				try {
 					casual = new Random();
 					for (int c = 0; c < 6; c++) {
+						//Zufallszahl der Raddrehungen (wie viel mal das Rad sich dreht)
 						int totalrounds = casual.nextInt(5) + 1;
 						for (int x = 0; x < totalrounds; x++) {
 							for (int i = 0; i < totalimages; i++) {
@@ -150,8 +148,8 @@ public class Lotto_Dreh_Rad {
 
 									zahlen[c] = (limit / 2);
 									
-									st_zahlen += (limit) + " ";
-									st_extracted += " " + (limit / 2);
+									//st_zahlen += (limit) + " ";
+									//st_extracted += " " + (limit / 2);
 
 									totalimages = limit;
 									round = false;
@@ -178,23 +176,9 @@ public class Lotto_Dreh_Rad {
 				}
 				
 				
-				
-				java.util.List al_dreh_zahlen=Arrays.asList(zahlen);
-				java.util.List al_user_zahlen_tmp=Arrays.asList(user_zahl);
-				System.out.println(""+al_dreh_zahlen.toString()+" "+al_user_zahlen_tmp.toString());
-				
-				for(int win_t=0,i=0;i<al_dreh_zahlen.size();i++) {
-					int tmp=al_dreh_zahlen.indexOf(al_user_zahlen_tmp.get(i));
-							System.out.println(""+tmp+al_dreh_zahlen.get(i)+" "+al_user_zahlen_tmp.get(i));
-							if(al_dreh_zahlen.indexOf(al_user_zahlen_tmp.get(i))!=-1) {
-						win_t++;
-						System.out.println("vmklvjdfkmv");
-					}
-				}
-				
 				totalimages = buffimage.length;
-				st_extracted = "";
-				st_zahlen = "";
+				//st_extracted = "";
+				//st_zahlen = "";
 				zahlen = new int[6];
 
 			}
@@ -203,9 +187,11 @@ public class Lotto_Dreh_Rad {
 		exthread.start();
 		isrunning=false;
 	}
+	
 	protected int[] getComb() {
 		return zahlen;
 	}
+	
 	public static void setUserCombi(int[] userZahl) {
 		user_zahl=userZahl;
 	}
